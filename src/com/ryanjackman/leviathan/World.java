@@ -9,8 +9,11 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.tiled.TiledMap;
 
+import com.ryanjackman.leviathan.actions.Action;
+import com.ryanjackman.leviathan.actions.MouseAction;
 import com.ryanjackman.leviathan.entities.Entity;
-import com.ryanjackman.leviathan.entities.House;
+import com.ryanjackman.leviathan.graphics.HUD;
+import com.ryanjackman.leviathan.graphics.Images;
 
 public class World {
 
@@ -21,10 +24,12 @@ public class World {
 	public int[][] places;
 	public ArrayList<Entity> entities;
 
+	public Action action;
+
 	protected int mapHeight, mapWidth;
 
 	private TiledMap tilemap;
-	protected int tileSize;
+	public int tileSize;
 
 	public Camera camera;
 
@@ -37,6 +42,10 @@ public class World {
 		hud = new HUD(this);
 
 		camera = new Camera(this);
+		
+		action = new MouseAction(this);
+		
+		Images.init();
 
 		try {
 			tilemap = new TiledMap("res/tilemap.tmx");
@@ -50,8 +59,8 @@ public class World {
 
 		entities = new ArrayList<Entity>();
 		places = new int[mapHeight][mapWidth];
-		for(int i = 0; i < places.length; i++){
-			for(int j = 0; j < places[i].length; j++){
+		for (int i = 0; i < places.length; i++) {
+			for (int j = 0; j < places[i].length; j++) {
 				places[i][j] = 0;
 			}
 		}
@@ -61,31 +70,19 @@ public class World {
 
 		hud.update(gc, delta);
 
-		for(Entity e : entities)
+		if (action != null) {
+			action.update(gc, delta);
+			if (action.completed)
+				action = new MouseAction(this);
+		}
+
+		for (Entity e : entities)
 			e.update(gc, delta);
 
 		Input input = gc.getInput();
 
 		int mx = input.getMouseX();
 		int my = input.getMouseY();
-
-		if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
-
-			int ex = (mx - (int) camera.getX()) / tileSize;
-			int ey = (my - (int) camera.getY()) / tileSize;
-
-			if (player.haveFunds(House.COST_ENERGY, House.COST_MONEY,
-					House.COST_RESOURCE)) {
-				// entities.add());
-				if(places[ex][ey] == 0){
-					entities.add(new House(this, ex * tileSize, ey * tileSize));
-					player.addEnergy(-House.COST_ENERGY);
-					player.addMoney(-House.COST_MONEY);
-					player.addResource(-House.COST_RESOURCE);
-					places[ex][ey] = 1;
-				}
-			}
-		}
 
 		Integer angle = null;
 
@@ -172,9 +169,20 @@ public class World {
 					firstTileY, lastTileX, lastTileY);
 		}
 
-		for(Entity e : entities)
+		for (Entity e : entities)
 			e.render(gc, g);
 
 		hud.render(gc, g);
+
+		if (action != null)
+			action.render(gc, g);
+	}
+	
+	public Entity entityAtTile(int x, int y){
+		for(Entity e : entities){
+			if( e.tileX == x && e.tileY == y)
+				return e;
+		}
+		return null;
 	}
 }

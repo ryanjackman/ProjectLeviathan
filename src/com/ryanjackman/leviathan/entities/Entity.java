@@ -2,15 +2,16 @@ package com.ryanjackman.leviathan.entities;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import com.ryanjackman.leviathan.World;
+import com.ryanjackman.leviathan.graphics.Images;
 
 public abstract class Entity {
 
-	private int x, y;
-	private Image image;
+	public int x, y;
+	
+	public int tileX, tileY;
 	public World world;
 	
 	public static int COST_MONEY = 0;
@@ -22,11 +23,9 @@ public abstract class Entity {
 		this.x = x;
 		this.y = y;
 		
-		try {
-			image = new Image("res/entity.png");
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		tileX = x / world.tileSize;
+		tileY = y / world.tileSize;
+
 	}
 
 	public void update(GameContainer gc, int delta) throws SlickException {
@@ -34,7 +33,7 @@ public abstract class Entity {
 	}
 
 	public void render(GameContainer gc, Graphics g) throws SlickException {
-		g.drawImage(image, x + world.camera.getX(), y + world.camera.getY());
+		g.drawImage(Images.houseImage, x + world.camera.getX(), y + world.camera.getY());
 	}
 
 }

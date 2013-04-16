@@ -11,8 +11,10 @@ public class Leviathan extends BasicGame {
 
 	private static boolean showFPS = true;
 	private static boolean fullscreen = false;
+	
+	public static AppGameContainer app;
 
-	public static int WIDTH = 800, HEIGHT = 600;
+	public static int WIDTH = 1024, HEIGHT = 768;
 
 	private World world;
 
@@ -36,7 +38,7 @@ public class Leviathan extends BasicGame {
 	}
 
 	public static void main(String[] args) throws SlickException {
-		AppGameContainer app = new AppGameContainer(new Leviathan());
+		app = new AppGameContainer(new Leviathan());
 
 		if (fullscreen) {
 			WIDTH = app.getScreenWidth();

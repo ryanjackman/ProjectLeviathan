@@ -26,5 +26,4 @@ public class House extends Entity{
 			energyTimer.reset();
 		}
 	}
-
 }
