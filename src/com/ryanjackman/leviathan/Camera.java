@@ -27,8 +27,8 @@ public class Camera {
 			y = ( y +  vector.y * scrollSpeed);
 			if(x > 0) x = 0;
 			if(y > 0) y = 0;
-			if(-x > world.width - Leviathan.WIDTH) x = -(world.width - Leviathan.WIDTH);
-			if(-y > world.height - Leviathan.HEIGHT) y = -(world.height - Leviathan.HEIGHT);
+			if(-x > world.mapWidth - Leviathan.WIDTH) x = -(world.mapWidth - Leviathan.WIDTH);
+			if(-y > world.mapHeight - Leviathan.HEIGHT) y = -(world.mapHeight - Leviathan.HEIGHT);
 		}
 	}
 

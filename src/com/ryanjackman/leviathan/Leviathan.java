@@ -1,5 +1,6 @@
 package com.ryanjackman.leviathan;
 
+import org.lwjgl.util.Timer;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
@@ -11,8 +12,8 @@ public class Leviathan extends BasicGame {
 	private static boolean showFPS = true;
 	private static boolean fullscreen = false;
 
-	public static final int WIDTH = 800, HEIGHT = 600;
-	
+	public static int WIDTH = 800, HEIGHT = 600;
+
 	private World world;
 
 	public Leviathan() {
@@ -21,11 +22,12 @@ public class Leviathan extends BasicGame {
 
 	@Override
 	public void init(GameContainer gc) throws SlickException {
-		world = new World(this);
+		world = new World(this);		
 	}
 
 	@Override
 	public void update(GameContainer gc, int delta) throws SlickException {
+		Timer.tick();
 		world.update(gc, delta);
 	}
 
@@ -36,8 +38,14 @@ public class Leviathan extends BasicGame {
 	public static void main(String[] args) throws SlickException {
 		AppGameContainer app = new AppGameContainer(new Leviathan());
 
+		if (fullscreen) {
+			WIDTH = app.getScreenWidth();
+			HEIGHT = app.getScreenHeight();
+		}
+
 		app.setDisplayMode(WIDTH, HEIGHT, fullscreen);
-		//app.setVSync(true);
+
+		app.setVSync(true);
 		app.setTargetFrameRate(60);
 		app.setShowFPS(showFPS);
 		app.start();

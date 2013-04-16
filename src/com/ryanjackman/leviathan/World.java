@@ -1,5 +1,7 @@
 package com.ryanjackman.leviathan;
 
+import java.util.ArrayList;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -7,21 +9,32 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.tiled.TiledMap;
 
+import com.ryanjackman.leviathan.entities.Entity;
+import com.ryanjackman.leviathan.entities.House;
+
 public class World {
 
-	Leviathan game;
+	public Leviathan game;
+	public HUD hud;
 
-	protected int height, width;
+	public Player player;
+	public int[][] places;
+	public ArrayList<Entity> entities;
 
-	protected int tileSize;
+	protected int mapHeight, mapWidth;
 
 	private TiledMap tilemap;
+	protected int tileSize;
 
-	private Camera camera;
-	private int scrollMargin = 50;
+	public Camera camera;
+
+	// private int scrollMargin = 50;
 
 	World(Leviathan game) {
 		this.game = game;
+
+		player = new Player();
+		hud = new HUD(this);
 
 		camera = new Camera(this);
 
@@ -29,15 +42,50 @@ public class World {
 			tilemap = new TiledMap("res/tilemap.tmx");
 
 			tileSize = tilemap.getTileWidth();
-			height = tilemap.getHeight() * tileSize;
-			width = tilemap.getWidth() * tileSize;
+			mapHeight = tilemap.getHeight() * tileSize;
+			mapWidth = tilemap.getWidth() * tileSize;
 		} catch (SlickException e) {
 			e.printStackTrace();
+		}
+
+		entities = new ArrayList<Entity>();
+		places = new int[mapHeight][mapWidth];
+		for(int i = 0; i < places.length; i++){
+			for(int j = 0; j < places[i].length; j++){
+				places[i][j] = 0;
+			}
 		}
 	}
 
 	public void update(GameContainer gc, int delta) throws SlickException {
+
+		hud.update(gc, delta);
+
+		for(Entity e : entities)
+			e.update(gc, delta);
+
 		Input input = gc.getInput();
+
+		int mx = input.getMouseX();
+		int my = input.getMouseY();
+
+		if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
+
+			int ex = (mx - (int) camera.getX()) / tileSize;
+			int ey = (my - (int) camera.getY()) / tileSize;
+
+			if (player.haveFunds(House.COST_ENERGY, House.COST_MONEY,
+					House.COST_RESOURCE)) {
+				// entities.add());
+				if(places[ex][ey] == 0){
+					entities.add(new House(this, ex * tileSize, ey * tileSize));
+					player.addEnergy(-House.COST_ENERGY);
+					player.addMoney(-House.COST_MONEY);
+					player.addResource(-House.COST_RESOURCE);
+					places[ex][ey] = 1;
+				}
+			}
+		}
 
 		Integer angle = null;
 
@@ -57,17 +105,19 @@ public class World {
 		if (angle != null)
 			camera.scroll(new Vector2f(angle));
 
-		int mx = input.getMouseX();
-		int my = input.getMouseY();
+		/*
+		 * if (mx < scrollMargin || my < scrollMargin || mx > Leviathan.WIDTH -
+		 * scrollMargin || my > Leviathan.HEIGHT - scrollMargin) { float a =
+		 * (float) Math.toDegrees(Math.atan2(mx - Leviathan.WIDTH / 2, my -
+		 * Leviathan.HEIGHT / 2)); camera.scroll(new Vector2f(-a + 270)); }
+		 */
 
-		if (mx < scrollMargin || my < scrollMargin
-				|| mx > Leviathan.WIDTH - scrollMargin
-				|| my > Leviathan.HEIGHT - scrollMargin) {
+		if (input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON)) {
 			float a = (float) Math.toDegrees(Math.atan2(mx - Leviathan.WIDTH
 					/ 2, my - Leviathan.HEIGHT / 2));
 			camera.scroll(new Vector2f(-a + 270));
 		}
-		
+
 		if (input.isKeyDown(Input.KEY_ESCAPE)) {
 			System.exit(1);
 		}
@@ -121,5 +171,10 @@ public class World {
 			tilemap.render(xRenderOffset, yRenderOffset, firstTileX,
 					firstTileY, lastTileX, lastTileY);
 		}
+
+		for(Entity e : entities)
+			e.render(gc, g);
+
+		hud.render(gc, g);
 	}
 }
