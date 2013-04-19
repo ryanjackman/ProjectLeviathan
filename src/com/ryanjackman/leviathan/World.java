@@ -33,11 +33,9 @@ public class World {
 
 	public Camera camera;
 
-	// private int scrollMargin = 50;
-
 	World(Leviathan game) {
 		this.game = game;
-
+		Images.init();
 		player = new Player();
 		hud = new HUD(this);
 
@@ -45,7 +43,7 @@ public class World {
 		
 		action = new MouseAction(this);
 		
-		Images.init();
+		
 
 		try {
 			tilemap = new TiledMap("res/tilemap.tmx");
@@ -101,13 +99,6 @@ public class World {
 
 		if (angle != null)
 			camera.scroll(new Vector2f(angle));
-
-		/*
-		 * if (mx < scrollMargin || my < scrollMargin || mx > Leviathan.WIDTH -
-		 * scrollMargin || my > Leviathan.HEIGHT - scrollMargin) { float a =
-		 * (float) Math.toDegrees(Math.atan2(mx - Leviathan.WIDTH / 2, my -
-		 * Leviathan.HEIGHT / 2)); camera.scroll(new Vector2f(-a + 270)); }
-		 */
 
 		if (input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON)) {
 			float a = (float) Math.toDegrees(Math.atan2(mx - Leviathan.WIDTH

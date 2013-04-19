@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import com.ryanjackman.leviathan.Leviathan;
 import com.ryanjackman.leviathan.World;
+import com.ryanjackman.leviathan.entities.House;
+import com.ryanjackman.leviathan.entities.Warehouse;
 
 public class HUD {
 	
@@ -18,17 +19,16 @@ public class HUD {
 	private ArrayList<Button> buttons;
 	
 	Button houseButton;
+	Button warehouseButton;
 	
 	public HUD(World world){
 		this.world = world;
 		buttons = new ArrayList<Button>();
 		
-		try {
-			houseButton = new Button(world, Leviathan.app, new Image("res/entity.png"), 20, Leviathan.HEIGHT - 50);
-			buttons.add(houseButton);
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		houseButton = new Button( world, Leviathan.app, Images.oneXOne, House.ID,  20, Leviathan.HEIGHT - 50);
+		warehouseButton = new Button( world, Leviathan.app, Images.twoXOne, Warehouse.ID,  80, Leviathan.HEIGHT - 50);
+		buttons.add(houseButton);
+		buttons.add(warehouseButton);
 	}
 	
 	public void update(GameContainer gc, int delta) throws SlickException {

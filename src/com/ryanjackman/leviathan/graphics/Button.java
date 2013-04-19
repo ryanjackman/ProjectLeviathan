@@ -18,9 +18,13 @@ public class Button implements ComponentListener{
 	
 	World world;
 	
-	public Button(World world, GameContainer gc, Image image, int x, int y){
+	private int id;
+	
+	public Button( World world, GameContainer gc, Image image, int id, int x, int y){
 		
 		this.world = world;
+		
+		this.id = id;
 		
 		button = new MouseOverArea(gc, image, x, y, this);
 		button.setMouseOverColor(Color.blue);
@@ -29,7 +33,7 @@ public class Button implements ComponentListener{
 
 	@Override
 	public void componentActivated(AbstractComponent source) {
-		world.action = new PlaceEntityAction(world);
+		world.action = new PlaceEntityAction(world, id);
 	}
 	
 	public void update(GameContainer gc, int delta) throws SlickException {

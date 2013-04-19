@@ -8,22 +8,22 @@ import com.ryanjackman.leviathan.World;
 import com.ryanjackman.leviathan.graphics.EntityInfoBox;
 import com.ryanjackman.leviathan.graphics.Images;
 
-public class House extends Entity{
-	
+public class Warehouse extends Entity {
+
 	Timer energyTimer;
 	
-	public static int ID = 1;
-	
-	public House(World world, int x, int y) {
+	public static int ID = 2;
+
+	public Warehouse(World world, int x, int y) {
 		super(world, x, y);
 		
 		costMoney = 0;
 		costEnergy = 10;
 		costResource = 0;
 		
-		ID = 1;
-
-		image = Images.oneXOne;
+		ID = 2;
+		
+		image = Images.twoXOne;
 		
 		energyTimer = new Timer();
 		
@@ -35,8 +35,9 @@ public class House extends Entity{
 		super.update(gc, delta);
 		
 		if(energyTimer.getTime() > 1){
-			world.player.addEnergy(10);
+			world.player.addResource(10);
 			energyTimer.reset();
 		}
 	}
+
 }

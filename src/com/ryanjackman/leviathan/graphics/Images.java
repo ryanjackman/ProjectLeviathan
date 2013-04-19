@@ -5,11 +5,13 @@ import org.newdawn.slick.SlickException;
 
 public class Images {
 	
-	public static Image houseImage;
+	public static Image oneXOne;
+	public static Image twoXOne;
 	
 	public static void init(){
 		try {
-			houseImage = new Image("res/entity.png");
+			oneXOne = new Image("res/32x32.png");
+			twoXOne = new Image("res/64x32.png");
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
