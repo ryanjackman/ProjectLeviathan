@@ -12,14 +12,9 @@ public class House extends Entity{
 	
 	Timer energyTimer;
 	
-	public static int ID = 1;
-	
 	public House(World world, int x, int y) {
-		super(world, x, y);
-		
-		costMoney = 0;
-		costEnergy = 10;
-		costResource = 0;
+		// money, energy, resource
+		super(world, Images.oneXOne, x, y, 0, 50, 200);
 		
 		ID = 1;
 

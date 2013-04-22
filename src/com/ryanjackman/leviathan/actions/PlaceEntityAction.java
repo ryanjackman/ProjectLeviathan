@@ -38,7 +38,6 @@ public class PlaceEntityAction extends Action {
 
 				e = initEntity(world, id, ex * world.tileSize, ey
 						* world.tileSize);
-				System.out.println(id);
 
 				if (world.player.haveFunds(e.getCostEnergy(), e.getCostMoney(),
 						e.getCostResource())) {
@@ -47,7 +46,11 @@ public class PlaceEntityAction extends Action {
 						world.player.addEnergy(-e.getCostEnergy());
 						world.player.addMoney(-e.getCostMoney());
 						world.player.addResource(-e.getCostResource());
-						world.places[ex][ey] = 1;
+
+						for (int i = 0; i < e.tileWidth; i++)
+							for (int j = 0; j < e.tileHeight; j++)
+								world.places[ex + i][ey + j] = 1;
+
 						completed = true;
 					}
 				}
@@ -71,8 +74,7 @@ public class PlaceEntityAction extends Action {
 		Input input = gc.getInput();
 
 		g.setColor(new Color(0, 0, 0, 150));
-		g.drawImage(e.image,
-				input.getMouseX() - world.tileSize / 2,
+		g.drawImage(e.image, input.getMouseX() - world.tileSize / 2,
 				input.getMouseY() - world.tileSize / 2);
 	}
 

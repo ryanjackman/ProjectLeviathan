@@ -15,11 +15,8 @@ public class Warehouse extends Entity {
 	public static int ID = 2;
 
 	public Warehouse(World world, int x, int y) {
-		super(world, x, y);
-		
-		costMoney = 0;
-		costEnergy = 10;
-		costResource = 0;
+		// money, energy, resource
+		super(world, Images.twoXOne, x, y, 0, 500, 0);
 		
 		ID = 2;
 		

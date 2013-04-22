@@ -20,7 +20,7 @@ public class EntityInfoBox {
 	public void render(GameContainer gc, Graphics g) throws SlickException {
 		g.setColor(new Color(0,0,0,150));
 		g.fillRoundRect(e.x - width, e.y - height, (float)width, (float)height, 3);
-		Fonts.basicFont.drawString(e.x - width + 10, e.y - height + 10, e.getClass().getName() );
+		Fonts.basicFont.drawString(e.x - width + 10, e.y - height + 10, e.getClass().getSimpleName() );
 		Fonts.basicFont.drawString(e.x - width + 10, e.y - height + 30, e.tileX + " " + e.tileY );
 	}
 }
