@@ -1,6 +1,5 @@
 package com.ryanjackman.leviathan.entities;
 
-import org.lwjgl.util.Timer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 
@@ -10,19 +9,17 @@ import com.ryanjackman.leviathan.graphics.Images;
 
 public class Warehouse extends Entity {
 
-	Timer energyTimer;
+	private float lastTime = 0;
+	private int updatePeriod = 1;
 	
 	public static int ID = 2;
 
 	public Warehouse(World world, int x, int y) {
 		// money, energy, resource
 		super(world, Images.twoXOne, x, y, 0, 500, 0);
-		
 		ID = 2;
 		
-		image = Images.twoXOne;
-		
-		energyTimer = new Timer();
+		buildTime = 10;
 		
 		infoBox = new EntityInfoBox(this);
 	}
@@ -31,9 +28,11 @@ public class Warehouse extends Entity {
 		
 		super.update(gc, delta);
 		
-		if(energyTimer.getTime() > 1){
-			world.player.addResource(10);
-			energyTimer.reset();
+		if (completed) {
+			if (world.gameTimer.getTime() - lastTime > updatePeriod) {
+				world.player.addResource(10);
+				lastTime = world.gameTimer.getTime();
+			}
 		}
 	}
 

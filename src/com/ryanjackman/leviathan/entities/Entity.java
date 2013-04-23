@@ -1,5 +1,6 @@
 package com.ryanjackman.leviathan.entities;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -29,13 +30,16 @@ public abstract class Entity {
 	protected int costMoney;
 	protected int costEnergy;
 	protected int costResource;
+	
+	protected float startTime;
+	protected int buildTime;
+	public boolean completed = false;
 
 	/**
 	 * @param x = x position relative to world
 	 * @param y = y position relative to world
-	 * @param iD = ID of 
-	 * @param world
-	 * @param image
+	 * @param world 
+	 * @param image = image to represent this entity
 	 * @param costMoney
 	 * @param costEnergy
 	 * @param costResource
@@ -59,10 +63,17 @@ public abstract class Entity {
 		
 		tileHeight = height / world.tileSize;
 		tileWidth = width / world.tileSize;
+		
+		startTime = world.gameTimer.getTime();
+		buildTime = 5;
 	}
 
 	public void update(GameContainer gc, int delta) throws SlickException {
 		Input i = gc.getInput();
+		
+		if(!completed)
+			if(world.gameTimer.getTime() - startTime > buildTime)
+				completed = true;
 
 		mouseDown = false;
 		if (i.getMouseX() - world.camera.getX() > x
@@ -77,6 +88,12 @@ public abstract class Entity {
 	public void render(GameContainer gc, Graphics g) throws SlickException {
 
 		g.drawImage(image, x + world.camera.getX(), y + world.camera.getY());
+		if(!completed){
+			g.setColor(Color.black);
+			g.fillRect(x + world.camera.getX(), y + world.camera.getY() + height - 5,  width, 5);
+			g.setColor(Color.red);
+			g.fillRect(x + world.camera.getX(), y + world.camera.getY()+ height - 5, (world.gameTimer.getTime() - startTime) / buildTime * width, 5);
+		}
 
 		if (mouseDown) {
 			if (world.action instanceof MouseAction)

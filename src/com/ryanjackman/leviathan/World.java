@@ -2,6 +2,7 @@ package com.ryanjackman.leviathan;
 
 import java.util.ArrayList;
 
+import org.lwjgl.util.Timer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -19,6 +20,8 @@ public class World {
 
 	public Leviathan game;
 	public HUD hud;
+	
+	public Timer gameTimer;
 
 	public Player player;
 	public int[][] places;
@@ -35,18 +38,17 @@ public class World {
 
 	World(Leviathan game) {
 		this.game = game;
+		gameTimer = new Timer();
 		Images.init();
 		player = new Player();
 		hud = new HUD(this);
 
 		camera = new Camera(this);
-		
+
 		action = new MouseAction(this);
-		
-		
 
 		try {
-			tilemap = new TiledMap("res/tilemap.tmx");
+			tilemap = new TiledMap("res/watermap.tmx");
 
 			tileSize = tilemap.getTileWidth();
 			mapHeight = tilemap.getHeight() * tileSize;
@@ -65,7 +67,7 @@ public class World {
 	}
 
 	public void update(GameContainer gc, int delta) throws SlickException {
-
+		
 		hud.update(gc, delta);
 
 		if (action != null) {
@@ -101,8 +103,7 @@ public class World {
 			camera.scroll(new Vector2f(angle));
 
 		if (input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON)) {
-			float a = (float) Math.toDegrees(Math.atan2(mx - Leviathan.WIDTH
-					/ 2, my - Leviathan.HEIGHT / 2));
+			float a = (float) Math.toDegrees(Math.atan2(mx - Leviathan.WIDTH / 2, my - Leviathan.HEIGHT / 2));
 			camera.scroll(new Vector2f(-a + 270));
 		}
 
@@ -156,8 +157,7 @@ public class World {
 
 		// Check if the map will be visible on the screen
 		if (lastTileX >= 0 && lastTileY >= 0) {
-			tilemap.render(xRenderOffset, yRenderOffset, firstTileX,
-					firstTileY, lastTileX, lastTileY);
+			tilemap.render(xRenderOffset, yRenderOffset, firstTileX, firstTileY, lastTileX, lastTileY);
 		}
 
 		for (Entity e : entities)
@@ -168,10 +168,10 @@ public class World {
 		if (action != null)
 			action.render(gc, g);
 	}
-	
-	public Entity entityAtTile(int x, int y){
-		for(Entity e : entities){
-			if( e.tileX == x && e.tileY == y)
+
+	public Entity entityAtTile(int x, int y) {
+		for (Entity e : entities) {
+			if (e.tileX == x && e.tileY == y)
 				return e;
 		}
 		return null;
