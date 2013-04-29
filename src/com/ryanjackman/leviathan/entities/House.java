@@ -8,6 +8,8 @@ import com.ryanjackman.leviathan.graphics.EntityInfoBox;
 import com.ryanjackman.leviathan.graphics.Images;
 
 public class House extends Entity {
+	
+	public static int ID = 1;
 
 	private float lastTime = 0;
 	private int updatePeriod = 1;
@@ -15,9 +17,7 @@ public class House extends Entity {
 	public House(World world, int x, int y) {
 		// money, energy, resource
 		super(world, Images.oneXOne, x, y, 0, 50, 200);
-
-		ID = 1;
-
+		
 		buildTime = 5;
 
 		infoBox = new EntityInfoBox(this);

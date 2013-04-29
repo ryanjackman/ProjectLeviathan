@@ -8,16 +8,15 @@ import com.ryanjackman.leviathan.graphics.EntityInfoBox;
 import com.ryanjackman.leviathan.graphics.Images;
 
 public class Warehouse extends Entity {
+	
+	public static int ID = 2;
 
 	private float lastTime = 0;
 	private int updatePeriod = 1;
-	
-	public static int ID = 2;
 
 	public Warehouse(World world, int x, int y) {
 		// money, energy, resource
 		super(world, Images.twoXOne, x, y, 0, 500, 0);
-		ID = 2;
 		
 		buildTime = 10;
 		

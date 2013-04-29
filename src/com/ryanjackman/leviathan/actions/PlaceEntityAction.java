@@ -44,9 +44,16 @@ public class PlaceEntityAction extends Action {
 					for (int j = 0; j < e.tileHeight; j++)
 						if (world.places[ex + i][ey + j] == 1)
 							empty = false;
+				
+				boolean buildable = true;
+				
+				for (int i = 0; i < e.tileWidth; i++)
+					for (int j = 0; j < e.tileHeight; j++)
+						if (world.tilemap.getTileProperty(world.tilemap.getTileId(ex + i, ey + j, 0), "buildable", "false").equals("false"))
+							buildable = false;
 
 				if (world.player.haveFunds(e.getCostEnergy(), e.getCostMoney(), e.getCostResource())) {
-					if (empty) {
+					if (empty && buildable) {
 						world.entities.add(e);
 						world.player.addEnergy(-e.getCostEnergy());
 						world.player.addMoney(-e.getCostMoney());

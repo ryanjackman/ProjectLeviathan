@@ -20,7 +20,7 @@ public class World {
 
 	public Leviathan game;
 	public HUD hud;
-	
+
 	public Timer gameTimer;
 
 	public Player player;
@@ -29,9 +29,8 @@ public class World {
 
 	public Action action;
 
+	public TiledMap tilemap;
 	protected int mapHeight, mapWidth;
-
-	private TiledMap tilemap;
 	public int tileSize;
 
 	public Camera camera;
@@ -67,7 +66,7 @@ public class World {
 	}
 
 	public void update(GameContainer gc, int delta) throws SlickException {
-		
+
 		hud.update(gc, delta);
 
 		if (action != null) {

@@ -15,8 +15,6 @@ public abstract class Entity {
 
 	public int x, y;
 	public int height, width;
-	
-	public static int ID;
 
 	public int tileX, tileY;
 	public int tileHeight, tileWidth;
@@ -30,16 +28,16 @@ public abstract class Entity {
 	protected int costMoney;
 	protected int costEnergy;
 	protected int costResource;
-	
+
 	protected float startTime;
 	protected int buildTime;
 	public boolean completed = false;
 
 	/**
-	 * @param x = x position relative to world
-	 * @param y = y position relative to world
-	 * @param world 
-	 * @param image = image to represent this entity
+	 * @param x
+	 * @param y
+	 * @param world
+	 * @param image
 	 * @param costMoney
 	 * @param costEnergy
 	 * @param costResource
@@ -48,7 +46,7 @@ public abstract class Entity {
 		this.world = world;
 		this.x = x;
 		this.y = y;
-		
+
 		this.costMoney = m;
 		this.costEnergy = e;
 		this.costResource = r;
@@ -57,29 +55,27 @@ public abstract class Entity {
 		tileY = y / world.tileSize;
 
 		image = i;
-		
+
 		height = image.getHeight();
 		width = image.getWidth();
-		
+
 		tileHeight = height / world.tileSize;
 		tileWidth = width / world.tileSize;
-		
+
 		startTime = world.gameTimer.getTime();
 		buildTime = 5;
 	}
 
 	public void update(GameContainer gc, int delta) throws SlickException {
 		Input i = gc.getInput();
-		
-		if(!completed)
-			if(world.gameTimer.getTime() - startTime > buildTime)
+
+		if (!completed)
+			if (world.gameTimer.getTime() - startTime > buildTime)
 				completed = true;
 
 		mouseDown = false;
-		if (i.getMouseX() - world.camera.getX() > x
-				&& i.getMouseX() - world.camera.getX() < x + width) {
-			if (i.getMouseY() - world.camera.getY() > y
-					&& i.getMouseY() - world.camera.getY() < y + height) {
+		if (i.getMouseX() - world.camera.getX() > x && i.getMouseX() - world.camera.getX() < x + width) {
+			if (i.getMouseY() - world.camera.getY() > y && i.getMouseY() - world.camera.getY() < y + height) {
 				mouseDown = true;
 			}
 		}
@@ -88,11 +84,11 @@ public abstract class Entity {
 	public void render(GameContainer gc, Graphics g) throws SlickException {
 
 		g.drawImage(image, x + world.camera.getX(), y + world.camera.getY());
-		if(!completed){
+		if (!completed) {
 			g.setColor(Color.black);
-			g.fillRect(x + world.camera.getX(), y + world.camera.getY() + height - 5,  width, 5);
+			g.fillRect(x + world.camera.getX(), y + world.camera.getY() + height - 5, width, 5);
 			g.setColor(Color.red);
-			g.fillRect(x + world.camera.getX(), y + world.camera.getY()+ height - 5, (world.gameTimer.getTime() - startTime) / buildTime * width, 5);
+			g.fillRect(x + world.camera.getX(), y + world.camera.getY() + height - 5, (world.gameTimer.getTime() - startTime) / buildTime * width, 5);
 		}
 
 		if (mouseDown) {

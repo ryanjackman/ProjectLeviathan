@@ -14,7 +14,8 @@ public class Leviathan extends BasicGame {
 	
 	public static AppGameContainer app;
 
-	public static int WIDTH = 1024, HEIGHT = 768;
+	public static int WIDTH = 1024;
+	public static int HEIGHT = 768;
 
 	private World world;
 
@@ -33,6 +34,7 @@ public class Leviathan extends BasicGame {
 		world.update(gc, delta);
 	}
 
+	@Override
 	public void render(GameContainer gc, Graphics g) throws SlickException {
 		world.render(gc, g);
 	}
