@@ -12,7 +12,10 @@ import org.newdawn.slick.tiled.TiledMap;
 
 import com.ryanjackman.leviathan.actions.Action;
 import com.ryanjackman.leviathan.actions.MouseAction;
+import com.ryanjackman.leviathan.actions.PlaceEntityAction;
 import com.ryanjackman.leviathan.entities.Entity;
+import com.ryanjackman.leviathan.entities.House;
+import com.ryanjackman.leviathan.entities.Warehouse;
 import com.ryanjackman.leviathan.graphics.HUD;
 import com.ryanjackman.leviathan.graphics.Images;
 
@@ -83,32 +86,39 @@ public class World {
 		int mx = input.getMouseX();
 		int my = input.getMouseY();
 
-		Integer angle = null;
+		Vector2f vector = new Vector2f(0, 0);
 
 		if (input.isKeyDown(Input.KEY_W)) {
-			angle = 90;
+			vector.y += 1;
 		}
 		if (input.isKeyDown(Input.KEY_S)) {
-			angle = 270;
+			vector.y -= 1;
 		}
 		if (input.isKeyDown(Input.KEY_A)) {
-			angle = 0;
+			vector.x += 1;
 		}
 		if (input.isKeyDown(Input.KEY_D)) {
-			angle = 180;
+			vector.x -= 1;
 		}
 
-		if (angle != null)
-			camera.scroll(new Vector2f(angle));
+		camera.scroll(vector.normalise());
 
 		if (input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON)) {
 			float a = (float) Math.toDegrees(Math.atan2(mx - Leviathan.WIDTH / 2, my - Leviathan.HEIGHT / 2));
 			camera.scroll(new Vector2f(-a + 270));
 		}
 
-		if (input.isKeyDown(Input.KEY_ESCAPE)) {
-			System.exit(1);
+		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
+			if (action instanceof MouseAction)
+				System.exit(1);
+			else
+				action = new MouseAction(this);
 		}
+
+		if (input.isKeyPressed(Input.KEY_1))
+			action = new PlaceEntityAction(this, House.ID);
+		if (input.isKeyPressed(Input.KEY_1))
+			action = new PlaceEntityAction(this, Warehouse.ID);
 	}
 
 	public void render(GameContainer gc, Graphics g) throws SlickException {

@@ -35,4 +35,8 @@ public class House extends Entity {
 		}
 
 	}
+	
+	public boolean canPlace(int x, int y){
+		return world.tilemap.getTileProperty(world.tilemap.getTileId(x, y, 0), "resource", "false").equals("true");
+	}
 }

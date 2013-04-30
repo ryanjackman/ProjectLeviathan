@@ -108,4 +108,8 @@ public abstract class Entity {
 	public int getCostResource() {
 		return costResource;
 	}
+
+	public boolean canPlace(int ex, int ey) {
+		return true;
+	}
 }

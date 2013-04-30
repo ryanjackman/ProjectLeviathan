@@ -53,7 +53,7 @@ public class PlaceEntityAction extends Action {
 							buildable = false;
 
 				if (world.player.haveFunds(e.getCostEnergy(), e.getCostMoney(), e.getCostResource())) {
-					if (empty && buildable) {
+					if (empty && buildable && e.canPlace(ex, ey)) {
 						world.entities.add(e);
 						world.player.addEnergy(-e.getCostEnergy());
 						world.player.addMoney(-e.getCostMoney());

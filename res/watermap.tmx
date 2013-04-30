@@ -12,6 +12,12 @@
     <property name="buildable" value="true"/>
    </properties>
   </tile>
+  <tile id="2">
+   <properties>
+    <property name="buildable" value="true"/>
+    <property name="resource" value="true"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="Tile Layer 1" width="50" height="50">
   <data encoding="base64" compression="zlib">
