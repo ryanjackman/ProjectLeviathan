@@ -10,6 +10,7 @@ import org.newdawn.slick.SlickException;
 import com.ryanjackman.leviathan.Leviathan;
 import com.ryanjackman.leviathan.World;
 import com.ryanjackman.leviathan.entities.House;
+import com.ryanjackman.leviathan.entities.Shipyard;
 import com.ryanjackman.leviathan.entities.Warehouse;
 
 public class HUD {
@@ -20,6 +21,7 @@ public class HUD {
 	
 	Button houseButton;
 	Button warehouseButton;
+	Button shipyardButton;
 	
 	public HUD(World world){
 		this.world = world;
@@ -27,8 +29,10 @@ public class HUD {
 		
 		houseButton = new Button( world, Leviathan.app, Images.oneXOne, House.ID,  20, Leviathan.HEIGHT - 50);
 		warehouseButton = new Button( world, Leviathan.app, Images.twoXOne, Warehouse.ID,  80, Leviathan.HEIGHT - 50);
+		shipyardButton = new Button( world, Leviathan.app, Images.shipyard, Shipyard.ID,  180, Leviathan.HEIGHT - 70);
 		buttons.add(houseButton);
 		buttons.add(warehouseButton);
+		buttons.add(shipyardButton);
 	}
 	
 	public void update(GameContainer gc, int delta) throws SlickException {

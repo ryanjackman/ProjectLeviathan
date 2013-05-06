@@ -15,9 +15,11 @@ import com.ryanjackman.leviathan.actions.MouseAction;
 import com.ryanjackman.leviathan.actions.PlaceEntityAction;
 import com.ryanjackman.leviathan.entities.Entity;
 import com.ryanjackman.leviathan.entities.House;
+import com.ryanjackman.leviathan.entities.Shipyard;
 import com.ryanjackman.leviathan.entities.Warehouse;
 import com.ryanjackman.leviathan.graphics.HUD;
 import com.ryanjackman.leviathan.graphics.Images;
+import com.ryanjackman.leviathan.units.Unit;
 
 public class World {
 
@@ -29,6 +31,7 @@ public class World {
 	public Player player;
 	public int[][] places;
 	public ArrayList<Entity> entities;
+	public ArrayList<Unit> units;
 
 	public Action action;
 
@@ -66,6 +69,8 @@ public class World {
 				places[i][j] = 0;
 			}
 		}
+
+		units = new ArrayList<Unit>();
 	}
 
 	public void update(GameContainer gc, int delta) throws SlickException {
@@ -80,6 +85,27 @@ public class World {
 
 		for (Entity e : entities)
 			e.update(gc, delta);
+
+		for (Unit u : units)
+			u.update(gc, delta);
+
+		for (int i = 0; i < units.size(); i++) {
+			for (int j = i + 1; j < units.size(); j++) {
+				if (units.get(i).colliding(units.get(j))) {
+					System.out.println("collision");
+					units.get(i).resolveCollision(units.get(j));
+				}
+			}
+		}
+		
+		/*for (Unit u : units){
+			for (Unit v : units){
+				if (u.colliding(v)) {
+					System.out.println("collision");
+					u.resolveCollision(v);
+				}
+			}
+		}*/
 
 		Input input = gc.getInput();
 
@@ -117,8 +143,10 @@ public class World {
 
 		if (input.isKeyPressed(Input.KEY_1))
 			action = new PlaceEntityAction(this, House.ID);
-		if (input.isKeyPressed(Input.KEY_1))
+		if (input.isKeyPressed(Input.KEY_2))
 			action = new PlaceEntityAction(this, Warehouse.ID);
+		if (input.isKeyPressed(Input.KEY_3))
+			action = new PlaceEntityAction(this, Shipyard.ID);
 	}
 
 	public void render(GameContainer gc, Graphics g) throws SlickException {
@@ -168,6 +196,9 @@ public class World {
 		if (lastTileX >= 0 && lastTileY >= 0) {
 			tilemap.render(xRenderOffset, yRenderOffset, firstTileX, firstTileY, lastTileX, lastTileY);
 		}
+
+		for (Unit u : units)
+			u.render(gc, g);
 
 		for (Entity e : entities)
 			e.render(gc, g);

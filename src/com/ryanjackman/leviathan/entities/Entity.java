@@ -25,12 +25,12 @@ public abstract class Entity {
 	EntityInfoBox infoBox;
 	public boolean mouseDown;
 
-	protected int costMoney;
-	protected int costEnergy;
-	protected int costResource;
+	public static int costMoney;
+	public static int costEnergy;
+	public static int costResource;
 
 	protected float startTime;
-	protected int buildTime;
+	static int buildTime;
 	public boolean completed = false;
 
 	/**
@@ -38,18 +38,11 @@ public abstract class Entity {
 	 * @param y
 	 * @param world
 	 * @param image
-	 * @param costMoney
-	 * @param costEnergy
-	 * @param costResource
 	 */
-	Entity(World world, Image i, int x, int y, int m, int e, int r) {
+	Entity(World world, Image i, int x, int y) {
 		this.world = world;
 		this.x = x;
 		this.y = y;
-
-		this.costMoney = m;
-		this.costEnergy = e;
-		this.costResource = r;
 
 		tileX = x / world.tileSize;
 		tileY = y / world.tileSize;

@@ -7,9 +7,9 @@ public class Player {
 	private int resource;
 
 	Player() {
-		energy = 10000;
+		energy = 100000;
 		money = 0;
-		resource = 2000;
+		resource = 100000;
 	}
 	
 	public boolean haveFunds(int e, int m, int r){

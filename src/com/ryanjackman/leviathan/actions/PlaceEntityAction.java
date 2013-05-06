@@ -10,6 +10,7 @@ import com.ryanjackman.leviathan.Leviathan;
 import com.ryanjackman.leviathan.World;
 import com.ryanjackman.leviathan.entities.Entity;
 import com.ryanjackman.leviathan.entities.House;
+import com.ryanjackman.leviathan.entities.Shipyard;
 import com.ryanjackman.leviathan.entities.Warehouse;
 
 public class PlaceEntityAction extends Action {
@@ -44,15 +45,16 @@ public class PlaceEntityAction extends Action {
 					for (int j = 0; j < e.tileHeight; j++)
 						if (world.places[ex + i][ey + j] == 1)
 							empty = false;
-				
+
 				boolean buildable = true;
-				
+
 				for (int i = 0; i < e.tileWidth; i++)
 					for (int j = 0; j < e.tileHeight; j++)
 						if (world.tilemap.getTileProperty(world.tilemap.getTileId(ex + i, ey + j, 0), "buildable", "false").equals("false"))
 							buildable = false;
 
 				if (world.player.haveFunds(e.getCostEnergy(), e.getCostMoney(), e.getCostResource())) {
+					System.out.println("player has funds " + e.costEnergy + " " + e.costMoney + " " + e.costResource);
 					if (empty && buildable && e.canPlace(ex, ey)) {
 						world.entities.add(e);
 						world.player.addEnergy(-e.getCostEnergy());
@@ -76,6 +78,8 @@ public class PlaceEntityAction extends Action {
 			return new House(world, x, y);
 		case 2:
 			return new Warehouse(world, x, y);
+		case 3:
+			return new Shipyard(world, x, y);
 		default:
 			return new House(world, x, y);
 		}
