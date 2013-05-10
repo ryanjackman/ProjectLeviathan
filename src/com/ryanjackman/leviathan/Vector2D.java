@@ -47,8 +47,7 @@ public class Vector2D {
 	}
 
 	public float getDistance(Vector2D v2) {
-		return (float) Math.sqrt((v2.getX() - getX()) * (v2.getX() - getX())
-				+ (v2.getY() - getY()) * (v2.getY() - getY()));
+		return (float) Math.sqrt((v2.getX() - getX()) * (v2.getX() - getX()) + (v2.getY() - getY()) * (v2.getY() - getY()));
 	}
 
 	public Vector2D add(Vector2D v2) {
@@ -88,7 +87,7 @@ public class Vector2D {
 	public String toString() {
 		return "X: " + getX() + " Y: " + getY();
 	}
-	
+
 	public double getTheta() {
 		double theta = Math.toDegrees(Math.atan2(y, x));
 		if ((theta < -360) || (theta > 360)) {
@@ -99,6 +98,6 @@ public class Vector2D {
 		}
 
 		return theta;
-	} 
+	}
 
 }

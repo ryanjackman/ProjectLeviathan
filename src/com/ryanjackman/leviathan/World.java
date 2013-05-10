@@ -32,11 +32,14 @@ public class World {
 	public int[][] places;
 	public ArrayList<Entity> entities;
 	public ArrayList<Unit> units;
+	
+	public Vector2D target;
 
 	public Action action;
 
 	public TiledMap tilemap;
-	protected int mapHeight, mapWidth;
+	public int mapHeight;
+	public int mapWidth;
 	public int tileSize;
 
 	public Camera camera;
@@ -74,7 +77,8 @@ public class World {
 	}
 
 	public void update(GameContainer gc, int delta) throws SlickException {
-
+		Input input = gc.getInput();
+		
 		hud.update(gc, delta);
 
 		if (action != null) {
@@ -85,30 +89,25 @@ public class World {
 
 		for (Entity e : entities)
 			e.update(gc, delta);
-
+		
+		if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON) && action instanceof MouseAction) {
+			target = new Vector2D(input.getMouseX() - camera.getX(), input.getMouseY() - camera.getY());
+			System.out.println("Target set at " + target.x + ", " + target.y);
+			for (Unit u : units)
+				u.moving = true;
+		}
+		
 		for (Unit u : units)
 			u.update(gc, delta);
 
 		for (int i = 0; i < units.size(); i++) {
 			for (int j = i + 1; j < units.size(); j++) {
 				if (units.get(i).colliding(units.get(j))) {
-					System.out.println("collision");
 					units.get(i).resolveCollision(units.get(j));
 				}
 			}
 		}
 		
-		/*for (Unit u : units){
-			for (Unit v : units){
-				if (u.colliding(v)) {
-					System.out.println("collision");
-					u.resolveCollision(v);
-				}
-			}
-		}*/
-
-		Input input = gc.getInput();
-
 		int mx = input.getMouseX();
 		int my = input.getMouseY();
 

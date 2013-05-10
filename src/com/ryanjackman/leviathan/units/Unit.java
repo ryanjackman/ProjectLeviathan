@@ -4,17 +4,14 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 
-import com.ryanjackman.leviathan.Leviathan;
 import com.ryanjackman.leviathan.World;
 import com.ryanjackman.leviathan.Vector2D;
 import com.ryanjackman.leviathan.graphics.Images;
 
 public class Unit {
 
-	float x, y;
-
-	private int radius = 10;
-	private float restitution = 0.1f;
+	private int radius = 8;
+	private float restitution = 0f;
 	private float mass = 10;
 
 	Vector2D position;
@@ -24,6 +21,8 @@ public class Unit {
 	public World world;
 
 	private Image image;
+	
+	public boolean moving = false;
 
 	public Unit(World world, int x, int y) {
 		this.world = world;
@@ -31,34 +30,35 @@ public class Unit {
 		position.x = x;
 		position.y = y;
 
-		velocity = new Vector2D((float) (Math.random() * 2 - 1), (float) (Math.random() * 2 - 1));
-		velocity.normalize();
+		velocity = new Vector2D(0, 0);
 
 		image = Images.unit;
 
-		//radius = 10;
+		// radius = 10;
 	}
 
 	public void update(GameContainer gc, int delta) {
-		/*
-		 * if (Math.random() * 100 < 1) { velocity = new Vector2D((float)
-		 * (Math.random() * 2 - 1), (float) (Math.random() * 2 - 1));
-		 * velocity.normalize(); }
-		 */
-		
-		//if(newVelocity != null) {
-			//velocity = newVelocity;
-			//this.velocity.setX(newVelocity.getX());
-			//this.velocity.setY(newVelocity.getY());
-			//velocity = new Vector2D(newVelocity.getX(), newVelocity.getY());
-		//	newVelocity = null;
-		//}
+		//Input input = gc.getInput();
+
+
+		if(world.target != null){
+
+			if (position.getDistance(world.target) > 20 && moving) {
+				
+				Vector2D targetVector = new Vector2D(world.target.x - position.x, world.target.y - position.y);
+				targetVector.normalize();
+				velocity = velocity.add(targetVector);
+			} else{
+				moving = false;
+				velocity = new Vector2D(0,0);
+				System.out.println("Destination Reached.");
+			}
+		}
+
+		velocity.normalize();
 
 		this.position.setX(this.position.getX() + (this.velocity.getX()));
 		this.position.setY(this.position.getY() + (this.velocity.getY()));
-
-		this.x = position.x;
-		this.y = position.y;
 
 		// TODO - Where should I be checking for epsilon?
 		if (Math.abs(this.velocity.getX()) < .008)
@@ -70,8 +70,8 @@ public class Unit {
 			this.position.setX(this.radius);
 			this.velocity.setX(-(this.velocity.getX() * restitution));
 			this.velocity.setY(this.velocity.getY() * restitution);
-		} else if (this.position.getX() + this.radius > Leviathan.WIDTH) {
-			this.position.setX(Leviathan.WIDTH - this.radius);
+		} else if (this.position.getX() + this.radius > world.mapWidth) {
+			this.position.setX(world.mapWidth - this.radius);
 			this.velocity.setX(-(this.velocity.getX() * restitution));
 			this.velocity.setY((this.velocity.getY() * restitution));
 		}
@@ -79,16 +79,16 @@ public class Unit {
 			this.position.setY(this.radius);
 			this.velocity.setY(-(this.velocity.getY() * restitution));
 			this.velocity.setX((this.velocity.getX() * restitution));
-		} else if (this.position.getY() + this.radius > Leviathan.HEIGHT) {
-			this.position.setY(Leviathan.HEIGHT - this.radius);
+		} else if (this.position.getY() + this.radius > world.mapHeight) {
+			this.position.setY(world.mapHeight - this.radius);
 			this.velocity.setY(-(this.velocity.getY() * restitution));
 			this.velocity.setX((this.velocity.getX() * restitution));
 		}
 	}
 
 	public void render(GameContainer gc, Graphics g) {
-		// this.image.setRotation((float) velocity.getTheta() - 90);
-		g.drawImage(image, x + world.camera.getX(), y + world.camera.getY());
+		this.image.setRotation((float) velocity.getTheta() - 90);
+		g.drawImage(image, position.x + world.camera.getX(), position.y + world.camera.getY());
 	}
 
 	public boolean colliding(Unit unit) {
@@ -138,9 +138,8 @@ public class Unit {
 		float im2 = 1 / unit.mass;
 
 		// push-pull them apart
-		// position = position.add(mtd.multiply(im1 / (im1 + im2)));
-		// unit.position = unit.position.subtract(mtd.multiply(im2 / (im1 +
-		// im2)));
+		position = position.add(mtd.multiply(im1 / (im1 + im2)));
+		unit.position = unit.position.subtract(mtd.multiply(im2 / (im1 + im2)));
 
 		// impact speed
 		Vector2D v = (this.velocity.subtract(unit.velocity));
@@ -155,11 +154,6 @@ public class Unit {
 		Vector2D impulse = mtd.multiply(i);
 
 		// change in momentum
-		//newVelocity = this.velocity.add(impulse.multiply(im1));
-		//System.out.println(impulse.multiply(im1).x);
-		//this.velocity.x += impulse.multiply(im1).x;
-		//this.velocity.y += impulse.multiply(im1).y;
-		//unit.newVelocity = unit.velocity.subtract(impulse.multiply(im2));/**/
 		this.velocity = this.velocity.add(impulse.multiply(im1));
 		unit.velocity = unit.velocity.subtract(impulse.multiply(im2));
 
