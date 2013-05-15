@@ -19,7 +19,7 @@ import com.ryanjackman.leviathan.entities.Shipyard;
 import com.ryanjackman.leviathan.entities.Warehouse;
 import com.ryanjackman.leviathan.graphics.HUD;
 import com.ryanjackman.leviathan.graphics.Images;
-import com.ryanjackman.leviathan.units.Unit;
+import com.ryanjackman.leviathan.units.UnitGroup;
 
 public class World {
 
@@ -31,9 +31,7 @@ public class World {
 	public Player player;
 	public int[][] places;
 	public ArrayList<Entity> entities;
-	public ArrayList<Unit> units;
-	
-	public Vector2D target;
+	public ArrayList<UnitGroup> groups;
 
 	public Action action;
 
@@ -73,12 +71,12 @@ public class World {
 			}
 		}
 
-		units = new ArrayList<Unit>();
+		groups = new ArrayList<UnitGroup>();
 	}
 
 	public void update(GameContainer gc, int delta) throws SlickException {
 		Input input = gc.getInput();
-		
+
 		hud.update(gc, delta);
 
 		if (action != null) {
@@ -89,25 +87,32 @@ public class World {
 
 		for (Entity e : entities)
 			e.update(gc, delta);
-		
-		if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON) && action instanceof MouseAction) {
-			target = new Vector2D(input.getMouseX() - camera.getX(), input.getMouseY() - camera.getY());
-			System.out.println("Target set at " + target.x + ", " + target.y);
-			for (Unit u : units)
-				u.moving = true;
-		}
-		
-		for (Unit u : units)
+
+		for (UnitGroup u : groups)
 			u.update(gc, delta);
 
-		for (int i = 0; i < units.size(); i++) {
-			for (int j = i + 1; j < units.size(); j++) {
-				if (units.get(i).colliding(units.get(j))) {
-					units.get(i).resolveCollision(units.get(j));
+		for (UnitGroup g : groups) {
+			for (int i = 0; i < g.units.size(); i++) {
+				for (UnitGroup u : groups) {
+					for (int j = i + 1; j < u.units.size(); j++) {
+						if (g.units.get(i).colliding(u.units.get(j))) {
+							g.units.get(i).resolveCollision(u.units.get(j));
+						}
+					}
 				}
 			}
 		}
 		
+		for (UnitGroup g : groups) {
+			for (int i = 0; i < g.units.size(); i++) {
+				for(Entity e : entities){
+					if(g.units.get(i).colliding(e))
+						g.units.get(i).resolveCollision(e);;
+						
+				}
+			}
+		}
+
 		int mx = input.getMouseX();
 		int my = input.getMouseY();
 
@@ -196,8 +201,8 @@ public class World {
 			tilemap.render(xRenderOffset, yRenderOffset, firstTileX, firstTileY, lastTileX, lastTileY);
 		}
 
-		for (Unit u : units)
-			u.render(gc, g);
+		for (UnitGroup gr : groups)
+			gr.render(gc, g);
 
 		for (Entity e : entities)
 			e.render(gc, g);

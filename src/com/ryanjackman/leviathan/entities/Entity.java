@@ -15,6 +15,7 @@ public abstract class Entity {
 
 	public int x, y;
 	public int height, width;
+	public float radius = 32;
 
 	public int tileX, tileY;
 	public int tileHeight, tileWidth;
@@ -32,6 +33,7 @@ public abstract class Entity {
 	protected float startTime;
 	static int buildTime;
 	public boolean completed = false;
+	
 
 	/**
 	 * @param x

@@ -7,6 +7,7 @@ import com.ryanjackman.leviathan.World;
 import com.ryanjackman.leviathan.graphics.EntityInfoBox;
 import com.ryanjackman.leviathan.graphics.Images;
 import com.ryanjackman.leviathan.units.Unit;
+import com.ryanjackman.leviathan.units.UnitGroup;
 
 public class Shipyard extends Entity {
 
@@ -18,9 +19,14 @@ public class Shipyard extends Entity {
 
 	private float unitTime = 1;
 	private float lastUnitPlaced = 0;
+	
+	private UnitGroup group;
 
 	public Shipyard(World world, int x, int y) {
 		super(world, Images.shipyard, x, y);
+		
+		group = new UnitGroup(world);
+		world.groups.add(group);
 
 		buildTime = 2;
 
@@ -31,9 +37,9 @@ public class Shipyard extends Entity {
 		super.update(gc, delta);
 		if (completed) {
 			if (world.gameTimer.getTime() > lastUnitPlaced + unitTime) {
-				if (world.units.size() < 200) {
+				if (group.units.size() < 20) {
 					if (world.player.haveFunds(10, 0, 10)) {
-						world.units.add(new Unit(world, x + 100 + (int) (Math.random() * 20), y + 100 + (int) (Math.random() * 20)));
+						group.units.add(new Unit(world, group, x + 100 + (int) (Math.random() * 20), y + 100 + (int) (Math.random() * 20)));
 						world.player.addEnergy(-10);
 						world.player.addResource(-10);
 						lastUnitPlaced = world.gameTimer.getTime();
@@ -41,7 +47,6 @@ public class Shipyard extends Entity {
 				}
 			}
 		}
-
 	}
 
 	public static String[] getInfo() {
